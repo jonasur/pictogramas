@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PictogramGen - Creador de Agendas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .pictogram-preview { max-height: 250px; border: 2px solid #dee2e6; border-radius: 10px; }
+        .agenda-item { background: #fff; border-radius: 8px; margin-bottom: 5px; padding: 10px; border-left: 5px solid #007bff; }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+    <header class="text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary">🎨 PictogramGen</h1>
+        <p class="lead text-muted">Crea pictogramas y organiza agendas terapéuticas</p>
+    </header>
+
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="card p-4 mb-4">
+                <h4 class="mb-3">1. Crear Nuevo Pictograma</h4>
+                <form action="/generar" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Texto</label>
+                        <input type="text" name="texto" class="form-control form-control-lg" placeholder="EJ: LAVARSE LAS MANOS" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Imagen</label>
+                        <input type="file" name="imagen" class="form-control" accept="image/*" required>
+                    </div>
+                    <div class="mb-3 text-start">
+                        <label class="form-label fw-bold">Categoría (Color del borde)</label>
+                        <select name="color_borde" class="form-select">
+                            <option value="white">Sin borde (Blanco)</option>
+                            <option value="#28a745">Verbo (Verde)</option>
+                            <option value="#ffc107">Sustantivo (Amarillo/Naranja)</option>
+                            <option value="#007bff">Adjetivo (Azul)</option>
+                            <option value="#e83e8c">Social/Cortesía (Rosa)</option>
+                            <option value="black">Otros (Negro)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Generar</button>
+                </form>
+            </div>
+
+            {% if resultado %}
+            <div class="card p-4 text-center border-primary">
+                <h4 class="text-primary mb-3">¡Pictograma Generado!</h4>
+                <img src="{{ url_for('static', filename=resultado) }}" class="pictogram-preview mb-3 mx-auto">
+                <div class="d-grid gap-2">
+                    <form action="/agregar_a_pdf" method="post">
+                        <input type="hidden" name="nombre_imagen" value="{{ resultado }}">
+                        <button type="submit" class="btn btn-success btn-lg">➕ Agregar a mi Agenda</button>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card p-4 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">📋 Tu Agenda</h4>
+                    <a href="/limpiar_lista" class="btn btn-sm btn-outline-danger">Vaciar</a>
+                </div>
+
+                {% if lista %}
+                    <div class="mb-4" style="max-height: 400px; overflow-y: auto;">
+                        {% for item in lista %}
+                            <div class="agenda-item d-flex align-items-center">
+                                <img src="{{ url_for('static', filename=item) }}" width="50" class="me-3 rounded">
+                                <span class="small text-truncate">{{ item }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="/descargar_pdf" class="btn btn-dark btn-lg">📄 Generar PDF Imprimible</a>
+                        {% if pdf_listo %}
+                            <div class="alert alert-success mt-2 text-center">
+                                <strong>¡PDF Listo!</strong><br>
+                                <a href="{{ url_for('static', filename=pdf_listo) }}" download class="btn btn-link">Haz clic aquí para descargar</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center my-5">Aún no has agregado pictogramas a tu agenda.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="text-center mt-5 text-muted">
+    <small>PictogramGen v1.0 - Desarrollado por Jonatan</small>
+</footer>
+
+</body>
+</html>

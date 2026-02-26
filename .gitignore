@@ -1,0 +1,17 @@
+# Secretos
+.env
+
+# Python y Entorno
+venv/
+__pycache__/
+*.pyc
+
+# Carpeta de subidas (Limpia y funcional)
+uploads/*
+!uploads/.gitkeep
+
+# Pictogramas generados (Ignora los resultados, no el diseño)
+static/pictogram_*
+
+# PDFs finales
+*.pdf
