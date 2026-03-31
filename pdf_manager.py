@@ -35,8 +35,6 @@ def crear_agenda_pdf(lista_imagenes, nombre_pdf):
             x = x_inicial + (col * (ancho_p + separacion))
             y = y_inicial - (fila * (alto_p + separacion))
 
-            # IMPORTANTE: Quitamos 'preserveAspectRatio' para forzar a que 
-            # mida EXACTAMENTE lo que pedimos, ya que la imagen ya es proporcional.
             c.drawImage(ruta_img, x, y, width=ancho_p, height=alto_p)
         
         if (i + 1) % 12 == 0 and (i + 1) < len(lista_imagenes):
