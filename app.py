@@ -15,13 +15,13 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 
 @app.route('/')
 def index():
-    borrar_archivos_viejos(['uploads', 'static'], horas=24)
     # Obtenemos la lista de la sesión para que siempre se vea en el HTML
     lista_pdf = session.get('lista_pdf', [])
     return render_template('index.html', lista=lista_pdf)
 
 @app.route('/generar', methods=['POST'])
 def generar():
+    borrar_archivos_viejos(['uploads', 'static'], horas=24)
     os.makedirs('uploads', exist_ok=True)
     os.makedirs('static', exist_ok=True)
     texto = request.form.get('texto')
